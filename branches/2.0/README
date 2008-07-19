@@ -9,7 +9,16 @@ sent to the currently focused application as if typed on the keyboard.
 
 Please see the website for more information: http://risujin.org/cellwriter
 
+CellWriter is licensed under the GPL.
+
 Michael Levin <risujin@risujin.org>
+
+
+Handwritten Character Recognition Library
+=========================================
+
+CellWriter's recognition code has been split off into libhcr. This library is
+licensed under the LGPL.
 
 
 Reporting bugs
@@ -62,28 +71,6 @@ If you find a bug, please follow this checklist:
 5.) Send me an email (address listed above). Please include any relevant
     information about your computer or handheld device (distribution, Xorg
     version, Wacom driver version, etc). Don't forget to attach your log file!
-
-
-Notes on compiling
-==================
-
-CellWriter is packaged with Autotools. To compile and install use:
-
-        ./configure && make && make install
-
-If you are NOT planning to install the software but want to run it from the
-source directory, you need to configure CellWriter to use the local data
-directory. When you run the configure script, pass the absolute path to the
-'share' subdirectory to the script:
-
-        ./configure --datadir=/home/[user]/.../cellwriter/share
-
-If you do not do this, CellWriter will not be able to load the tray icon or
-the word frequency file.
-
-CellWriter has additional compile-time flags. To see what they are, type:
-
-        ./configure --help
 
 
 Embedding in GNOME Screensaver
