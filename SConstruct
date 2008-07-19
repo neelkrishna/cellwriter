@@ -1,33 +1,19 @@
 #!/bin/python
 #
 ################################################################################
-# CellWriter (GPL) - Copyright (C) 2008 - Michael Levin
+# HCR Library (LGPL) - Copyright (C) 2008 - Michael Levin
 #
-# CellWriter is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
+# The HCR library is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
 #
-# CellWriter is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# CellWriter.  If not, see <http://www.gnu.org/licenses/>.
-################################################################################
-# libhcr (LGPL) - Copyright (C) 2008 - Michael Levin
-#
-# libhcr is free software: you can redistribute it and/or modify it under
-# the terms of the GNU Lesser General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
-# later version.
-#
-# libhcr is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# The HCR library is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License along
-# with libhcr.  If not, see <http://www.gnu.org/licenses/>.
+# with the HCR library. If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 #
 # While SCons supports Windows, this SConstruct file is for POSIX systems only!
@@ -40,23 +26,27 @@ package_name = 'CellWriter'
 package_url = 'http://risujin.org/cellwriter'
 version = '2.0.0'
 
+# The library requires its own settings
+libhcr_name = 'HCR Library'
+libhcr_lib = 'libhcr-1'
+libhcr_version = '1.0.0'
+
 # Get subversion revision and add it to the version
-def svn_revision():
-        revision = ''
-        try:
-                in_stream, out_stream = os.popen2('svn info')
-                result = out_stream.read()
-                in_stream.close()
-                out_stream.close()
-                start = result.find('Revision: ')
-                if start < 0:
-                        return ''
-                end = result.find('\n', start)
-                revision = 'r' + result[start + 10:end]
-        except:
-                pass
-        return revision
-version += svn_revision()
+svn_revision = ''
+try:
+        in_stream, out_stream = os.popen2('svn info')
+        result = out_stream.read()
+        in_stream.close()
+        out_stream.close()
+        start = result.find('Revision: ')
+        if start < 0:
+                return ''
+        end = result.find('\n', start)
+        svn_revision = 'r' + result[start + 10:end]
+except:
+        pass
+version += svn_revision
+libhcr_version += svn_revision
 
 # Builder for precompiled headers
 gch_builder = Builder(action = '$CC $CFLAGS $CCFLAGS $_CCCOMCOM ' +
@@ -168,10 +158,14 @@ def WriteConfigH(target, source, env):
                      '\n/* Configured paths */\n' +
                      '#define DATADIR "' + install_share + '"\n' +
                      '#define PKGDATADIR "' + install_data + '"\n' +
-                     '\n/* CellWriter-specific */\n' +
+                     '\n/* CellWriter */\n' +
                      '#define CELLWRITER_URL "' + package_url + '"\n' +
                      '#define ICON_PATH "' + cellwriter_env['icon_path'] +
-                                             '"\n')
+                                             '"\n' +
+                     '\n/* HCR Library */\n' +
+                     '#define LIBHCR_NAME "' + libhcr_name + '"\n' +
+                     '#define LIBHCR_LIB "' + libhcr_lib + '"\n' +
+                     '#define LIBHCR_VERSION "' + libhcr_version + '"\n')
         config.close()
 cellwriter_config = cellwriter_env.Command('config.h', '', WriteConfigH)
 cellwriter_env.Depends(cellwriter_config, 'SConstruct')

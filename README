@@ -17,8 +17,12 @@ Michael Levin <risujin@risujin.org>
 Handwritten Character Recognition Library
 =========================================
 
-CellWriter's recognition code has been split off into libhcr. This library is
-licensed under the LGPL.
+CellWriter's recognition code has been split off into libhcr.
+
+This library is licensed under the LGPL. It is legal to link to a dynamic
+version of the library from any program, but only GPL-compatible licensed
+programs may compile with libhcr code or link with a static version of the
+library.
 
 
 Reporting bugs
@@ -159,5 +163,6 @@ To toggle the main window:
 Thanks
 ======
 
-Big thanks to Nelson A. de Oliveira for his continuing support!
+Big thanks to Nelson A. de Oliveira for his continuing support of CellWriter's
+Debian package!
 
