@@ -31,22 +31,6 @@ libhcr_name = 'HCR Library'
 libhcr_lib = 'libhcr-1'
 libhcr_version = '1.0.0'
 
-# Get subversion revision and add it to the version
-svn_revision = ''
-try:
-        in_stream, out_stream = os.popen2('svn info')
-        result = out_stream.read()
-        in_stream.close()
-        out_stream.close()
-        start = result.find('Revision: ')
-        if start >= 0:
-                end = result.find('\n', start)
-                svn_revision = 'r' + result[start + 10:end]
-except:
-        pass
-version += svn_revision
-libhcr_version += svn_revision
-
 # Builder for precompiled headers
 gch_builder = Builder(action = '$CC $CFLAGS $CCFLAGS $_CCCOMCOM ' +
                                '-x c-header -c $SOURCE -o $TARGET')
@@ -148,6 +132,25 @@ if cellwriter_env['pch'] == 'yes':
 
 # Generate a config.h with definitions
 def WriteConfigH(target, source, env):
+        global version, libhcr_version
+
+        # Get subversion revision and add it to the version
+        svn_revision = ''
+        try:
+                in_stream, out_stream = os.popen2('svn info')
+                result = out_stream.read()
+                in_stream.close()
+                out_stream.close()
+                start = result.find('Revision: ')
+                if start >= 0:
+                        end = result.find('\n', start)
+                        svn_revision = 'r' + result[start + 10:end]
+        except:
+                pass
+        version += svn_revision
+        libhcr_version += svn_revision
+
+        # Write config
         config = open('config.h', 'w')
         config.write('\n/* Package parameters */\n' +
                      '#define PACKAGE "' + package + '"\n' +
@@ -166,6 +169,7 @@ def WriteConfigH(target, source, env):
                      '#define LIBHCR_LIB "' + libhcr_lib + '"\n' +
                      '#define LIBHCR_VERSION "' + libhcr_version + '"\n')
         config.close()
+
 cellwriter_config = cellwriter_env.Command('config.h', '', WriteConfigH)
 cellwriter_env.Depends(cellwriter_config, 'SConstruct')
 
