@@ -39,10 +39,9 @@ try:
         in_stream.close()
         out_stream.close()
         start = result.find('Revision: ')
-        if start < 0:
-                return ''
-        end = result.find('\n', start)
-        svn_revision = 'r' + result[start + 10:end]
+        if start >= 0:
+                end = result.find('\n', start)
+                svn_revision = 'r' + result[start + 10:end]
 except:
         pass
 version += svn_revision
@@ -127,7 +126,7 @@ Help(opts.GenerateHelpText(default_env))
 ################################################################################
 cellwriter_src = glob.glob('src/*.c') + glob.glob('src/*/*.c')
 cellwriter_env = default_env.Clone()
-cellwriter_env.Append(CPPPATH = '.')
+cellwriter_env.Append(CPPPATH = ['.', 'include', 'src/common'])
 cellwriter_env.Append(LIBS = ['m', 'Xtst'])
 cellwriter_env.ParseConfig('pkg-config gtk+-2.0 --cflags --libs')
 cellwriter_obj = cellwriter_env.Object(cellwriter_src)
@@ -145,7 +144,7 @@ def CellWriterPCH(header, deps = []):
         cellwriter_env.Depends(cellwriter_obj, pch)
         cellwriter_pch += pch
 if cellwriter_env['pch'] == 'yes':
-        CellWriterPCH('src/common.h')
+        CellWriterPCH('src/common/c_shared.h')
 
 # Generate a config.h with definitions
 def WriteConfigH(target, source, env):
