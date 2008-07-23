@@ -15,6 +15,7 @@
 \******************************************************************************/
 
 #include "c_shared.h"
+#include "windows/w_shared.h"
 #include <signal.h>
 
 /* Command line arguments */
@@ -122,8 +123,14 @@ int main(int argc, char *argv[])
         if (!init_gtk_gnome(argc, argv))
                 return 1;
         C_status("Initializing " PACKAGE_STRING);
+        W_init_defaults();
+        I_init_defaults();
 
-        /* Startup notification is sent when the first window shows but in if
+        /* TODO: Load profile data here */
+
+        W_init_main();
+
+        /* Startup notification is sent when the first window shows but if
            the window was closed during last start, it won't show at all so
            we need to do this manually */
         gdk_notify_startup_complete();

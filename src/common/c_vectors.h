@@ -122,6 +122,11 @@ static inline int C_vec2_eq(c_vec2_t a, c_vec2_t b)
         return a.x == b.x && a.y == b.y;
 }
 
+static inline int C_gdkcolor_eq(GdkColor a, GdkColor b)
+{
+        return a.red == b.red && a.green == b.green && a.blue == b.blue;
+}
+
 /******************************************************************************\
  Vector interpolation.
 \******************************************************************************/
@@ -166,5 +171,18 @@ static inline int C_rect_intersect(c_vec2_t o1, c_vec2_t s1,
 {
         return o1.x <= o2.x + s2.x && o1.y <= o2.y + s2.y &&
                o1.x + s1.x >= o2.x && o1.y + s2.y >= o2.y;
+}
+
+/******************************************************************************\
+ Create a GdkColor structure from 0-255 RGB values.
+\******************************************************************************/
+static inline GdkColor C_gdkcolor_rgb(int r, int g, int b)
+{
+        GdkColor c;
+
+        c.red = r * 255;
+        c.green = g * 255;
+        c.blue = b * 255;
+        return c;
 }
 

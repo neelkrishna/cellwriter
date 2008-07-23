@@ -14,8 +14,10 @@
  CellWriter. If not, see <http://www.gnu.org/licenses/>.
 \******************************************************************************/
 
-/* w_main.c */
-gboolean W_close_main(void);
-void W_init_defaults(void);
-void W_init_main(void);
+/* i_grid.c */
+void I_init_defaults(void);
+GtkWidget *I_init_grid(void);
 
+extern int i_cell_width, i_cell_height, i_grid_cols, i_grid_rows,
+           i_train_on_input, i_right_to_left,
+           i_corrections, i_rewrites, i_characters, i_inputs;
