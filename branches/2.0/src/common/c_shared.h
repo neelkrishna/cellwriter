@@ -26,8 +26,13 @@
 #include <ctype.h>
 #include <string.h>
 
+/* X11 is used for docking and sending out fake key events */
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+
 /* Interface is written in GTK */
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 /* HCR library */
 #include "hcr.h"
@@ -78,12 +83,21 @@ typedef enum {
         C_LM_CLEANUP,
 } c_log_mode_t;
 
-/* Define a compact boolean type. This actually does not make much of an impact
-   as far as memory usage is concerned but is helpful to denote usage. */
-typedef unsigned char bool;
+/* Define a boolean type compatible with GLib */
+typedef gboolean bool;
 
 /* Callback for GUI log handler */
 typedef void (*c_log_event_f)(c_log_level_t, int margin, const char *);
+
+/* c_color.c */
+GdkColor C_gdkcolor_highlight(GdkColor, float value);
+GdkColor C_gdkcolor_hsl(float hue, float sat, float lit);
+void C_gdkcolor_pattern_stop(GdkColor, cairo_pattern_t *,
+                             float offset, float alpha);
+GdkColor C_gdkcolor_scalef(GdkColor, float value);
+void C_gdkcolor_set_source(GdkColor, cairo_t *, float alpha);
+GdkColor C_gdkcolor_shade(GdkColor, float value);
+void C_gdkcolor_to_hsl(GdkColor, float *hue, float *sat, float *lit);
 
 /* c_log.c */
 #define C_assert(s) C_assert_full(__func__, !(s), #s)
