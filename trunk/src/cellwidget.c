@@ -1785,9 +1785,7 @@ void cell_widget_clear(void)
                 is_clear = TRUE;
         }
 
-        /* Only re-render when we aren't going to get a configure event */
-        if (!resized)
-                cell_widget_render();
+        cell_widget_render();
 }
 
 void cell_widget_train(void)
