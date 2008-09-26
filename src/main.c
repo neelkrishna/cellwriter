@@ -836,7 +836,7 @@ static void second_instance(char *str)
                 window_hide();
         else if (str[0] == '1' || str[0] == 'S' || str[0] == 's')
                 window_show();
-        else if (str[0] == 'T' || str[0] == 't')
+        else if (str[0] == '2' || str[0] == 'T' || str[0] == 't')
                 window_toggle();
 }
 
@@ -866,12 +866,20 @@ int main(int argc, char *argv[])
         /* See if the program is already running */
         g_message("Starting " PACKAGE_STRING);
         create_user_dir();
-        if (!window_embedded &&
-            single_instance_init((SingleInstanceFunc)second_instance,
-                                 window_force_hide ? "0" : "1")) {
-                gdk_notify_startup_complete();
-                g_message(PACKAGE_NAME " already running, quitting");
-                return 0;
+        if (!window_embedded) {
+                const char *msg;
+
+                msg = "2";
+                if (window_force_show)
+                        msg = "1";
+                else if (window_force_hide)
+                        msg = "0";
+                if (single_instance_init((SingleInstanceFunc)second_instance,
+                                         msg)) {
+                        gdk_notify_startup_complete();
+                        g_message(PACKAGE_NAME " already running, quitting");
+                        return 0;
+                }
         }
 
 #ifdef HAVE_GNOME
