@@ -30,40 +30,55 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         Single-instance checks
 */
 
+static GIOChannel *io_channel;
 static SingleInstanceFunc on_dupe;
-static int fifo;
 static char *path;
 
-static gboolean check_dupe(void)
+void single_instance_cleanup(void)
 {
+        if (io_channel) {
+                g_io_channel_unref(io_channel);
+                io_channel = NULL;
+        }
+        if (path && unlink(path) == -1)
+                log_errno("Failed to unlink program FIFO");
+}
+
+static gboolean on_fifo_input(GIOChannel *src, GIOCondition cond, gpointer data)
+{
+        GError *error;
         ssize_t len;
+        gsize bytes_read;
         char buf[2];
 
-        if (fifo <= 0 || !on_dupe)
+        if (!io_channel || !on_dupe)
                 return FALSE;
-        len = read(fifo, buf, 1);
+        error = NULL;
+        len = g_io_channel_read_chars(io_channel, buf, 1, &bytes_read, &error);
+
+        /* Error reading for some reason */
+        if (error) {
+                single_instance_cleanup();
+                return FALSE;
+        }
+
+        /* Handle the one-byte message */
         buf[1] = 0;
         if (len > 0)
                 on_dupe(buf);
         return TRUE;
 }
 
-void single_instance_cleanup(void)
-{
-        if (fifo > 0)
-                close(fifo);
-        if (path && unlink(path) == -1)
-                log_errno("Failed to unlink program FIFO");
-}
-
 int single_instance_init(SingleInstanceFunc func, const char *str)
 {
+        int fifo;
+
         on_dupe = func;
         path = g_build_filename(g_get_home_dir(), "." PACKAGE, "fifo", NULL);
 
         /* If we can open the program FIFO in write-only mode then we must
-           have a reader process already running. We send it a one-byte junk
-           message to wake it up and quit. */
+           have a reader process already running. We send it a one-byte
+           message and quit. */
         if ((fifo = open(path, O_WRONLY | O_NONBLOCK)) > 0) {
                 write(fifo, str, 1);
                 close(fifo);
@@ -78,21 +93,19 @@ int single_instance_init(SingleInstanceFunc func, const char *str)
                 single_instance_cleanup();
         }
 
-        /* Otherwise, create a read-only FIFO and poll for input */
-        fifo = 0;
+        /* Otherwise, create a read-only FIFO */
         if (mkfifo(path, S_IRUSR | S_IWUSR)) {
                 log_errno("Failed to create program FIFO");
                 return FALSE;
         }
-        if ((fifo = open(path, O_RDONLY | O_NONBLOCK)) == -1) {
+        if ((fifo = open(path, O_RDWR | O_NONBLOCK)) == -1) {
                 log_errno("Failed to open FIFO for reading");
                 return FALSE;
         }
 
-        /* Setup the polling function */
-        g_timeout_add_full(G_PRIORITY_DEFAULT_IDLE, 1000,
-                           (GSourceFunc)check_dupe, NULL, NULL);
-
+        /* Open and watch the fifo to become readable */
+	io_channel = g_io_channel_unix_new(fifo);
+	g_io_add_watch(io_channel, G_IO_IN, on_fifo_input, NULL);
         return FALSE;
 }
 
