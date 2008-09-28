@@ -575,6 +575,12 @@ gboolean key_widget_button_release(GtkWidget *widget, GdkEventButton *event,
         Key *key;
         int old_shifted;
 
+	/* Did we miss a keypress due to a server grab? */
+	if (key_widget->active < 0) {
+		event->type = GDK_BUTTON_PRESS;
+		key_widget_button_press(widget, event, key_widget);
+	}
+
         /* The last pressed key is the one we are releasing now */
         if (key_widget->active < 0 || key_widget->active > key_widget->len)
                 return FALSE;
