@@ -28,6 +28,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <X11/Xlib.h>
 #include <gdk/gdkx.h>
 
+/* Enable this option if your window manager support window gravity. With this
+   option, the CellWriter window will resize from the bottom using the
+   window manager rather than manually. */
+/* #define WINDOW_GRAVITY */
+
 /* options.c */
 void options_dialog_open(void);
 
@@ -189,17 +194,15 @@ static void set_geometry_hints(void)
                                       GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE);
         trace("%dx%d", geometry.min_width, geometry.min_height);
 
+#ifdef WINDOW_GRAVITY
         /* In some bright and sunny alternate universe when specifications are
            actually implemented as inteded, this function alone would cause the
            window frame to expand upwards without having to perform the ugly
-           hack in window_configure(). XFWM4 does not respect this hint and
-           setting this hint will further mess up the window_configure()
-           movement code. */
-        /*geometry.win_gravity = window_docked == WINDOW_DOCKED_TOP ?
-                                 GDK_GRAVITY_NORTH_WEST :
-                                 GDK_GRAVITY_SOUTH_WEST;
+           hack in window_configure(). */
+        geometry.win_gravity = GDK_GRAVITY_SOUTH_WEST;
         gtk_window_set_geometry_hints(GTK_WINDOW(window), window, &geometry,
-                                      GDK_HINT_WIN_GRAVITY);*/
+                                      GDK_HINT_WIN_GRAVITY);
+#endif
 }
 
 static void docked_move_resize(void)
@@ -266,6 +269,7 @@ static gboolean window_configure(GtkWidget *widget, GdkEventConfigure *event)
                 return FALSE;
         }
 
+#ifndef WINDOW_GRAVITY
         /* Keep the window aligned to the bottom border */
         if (height_change && window_frame.y + window_frame.height / 2 >
                              gdk_screen_get_height(screen) / 2)
@@ -299,6 +303,7 @@ static gboolean window_configure(GtkWidget *widget, GdkEventConfigure *event)
                 trace("moving to (%d, %d)", window_frame.x, window_frame.y);
         } else
                 window_frame = new_frame;
+#endif
 
         return FALSE;
 }
