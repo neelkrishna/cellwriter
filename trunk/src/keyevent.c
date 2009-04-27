@@ -235,20 +235,6 @@ static void reset_keyboard(void)
                 type_keycode(ke_num_lock.keycode);
 }
 
-static int is_modifier(unsigned int keysym)
-/* Returns TRUE for KeySyms that are tracked internally */
-{
-        switch (keysym) {
-        case XK_Shift_L:
-        case XK_Shift_R:
-        case XK_Num_Lock:
-        case XK_Caps_Lock:
-                return TRUE;
-        default:
-                return FALSE;
-        }
-}
-
 static void key_event_allocate(KeyEvent *key_event, unsigned int keysym)
 /* Either finds the KeyCode associated with the given keysym or overwrites
    a usable one to generate it */
@@ -324,11 +310,9 @@ static void key_event_allocate(KeyEvent *key_event, unsigned int keysym)
 }
 
 void key_event_new(KeyEvent *key_event, unsigned int keysym)
-/* Filters locks and shifts but allocates other keys normally */
+/* Allocates key event */
 {
         key_event->keysym = keysym;
-        if (is_modifier(keysym))
-                return;
         key_event_allocate(key_event, keysym);
 }
 
@@ -342,22 +326,9 @@ void key_event_free(KeyEvent *key_event)
         key_event->keysym = 0;
 }
 
-void key_event_press(KeyEvent *key_event)
-/* Press the KeyCode specified in the event */
+void key_event_press_force(KeyEvent *key_event)
+/* Press the KeyCode specified in the event without sticky key tracking */
 {
-        /* Track modifiers without actually using them */
-        if (key_event->keysym == XK_Shift_L ||
-            key_event->keysym == XK_Shift_R) {
-                key_shifted++;
-                return;
-        } else if (key_event->keysym == XK_Caps_Lock) {
-                key_caps_locked = !key_caps_locked;
-                return;
-        } else if (key_event->keysym == XK_Num_Lock) {
-                key_num_locked = !key_num_locked;
-                return;
-        }
-
         /* Invalid event */
         if (key_event->keycode < key_min || key_event->keycode > key_max)
                 return;
@@ -378,15 +349,28 @@ void key_event_press(KeyEvent *key_event)
         XSync(GDK_DISPLAY(), False);
 }
 
-void key_event_release(KeyEvent *key_event)
+void key_event_press(KeyEvent *key_event)
+/* Press the KeyCode specified in the event */
 {
         /* Track modifiers without actually using them */
         if (key_event->keysym == XK_Shift_L ||
             key_event->keysym == XK_Shift_R) {
-                key_shifted--;
+                key_shifted++;
+                return;
+        } else if (key_event->keysym == XK_Caps_Lock) {
+                key_caps_locked = !key_caps_locked;
+                return;
+        } else if (key_event->keysym == XK_Num_Lock) {
+                key_num_locked = !key_num_locked;
                 return;
         }
 
+        key_event_press_force(key_event);
+}
+
+void key_event_release_force(KeyEvent *key_event)
+/* Press the KeyCode specified in the event without sticky key tracking */
+{
         /* Invalid key event */
         if (key_event->keycode < key_min || key_event->keycode > key_max)
                 return;
@@ -399,6 +383,19 @@ void key_event_release(KeyEvent *key_event)
         if (key_event->shift)
                 release_keycode(ke_shift.keycode);
         XSync(GDK_DISPLAY(), False);
+}
+
+void key_event_release(KeyEvent *key_event)
+/* Release the KeyCode specified in the event */
+{
+        /* Track modifiers without actually using them */
+        if (key_event->keysym == XK_Shift_L ||
+            key_event->keysym == XK_Shift_R) {
+                key_shifted--;
+                return;
+        }
+
+        key_event_release_force(key_event);
 }
 
 #ifdef X_HAVE_UTF8_STRING

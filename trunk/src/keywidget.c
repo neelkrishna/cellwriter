@@ -438,6 +438,17 @@ static gboolean configure_event(GtkWidget *widget, GdkEventConfigure *event,
                                                  key_widget->min_height /
                                                  key_widget->y_range / 2);
 
+        /* Enable leave/notify signals */
+        if (key_widget->drawing_area->window) {
+                GdkEventMask mask;
+
+                mask = gdk_window_get_events(key_widget->drawing_area->window);
+                gdk_window_set_events(key_widget->drawing_area->window, mask |
+                                      GDK_ENTER_NOTIFY_MASK |
+                                      GDK_LEAVE_NOTIFY_MASK);
+        } else
+                g_warning("Failed to get GdkWindow for KeyWidget");
+
         key_widget_update_colors();
         key_widget_render(key_widget);
         return TRUE;
@@ -503,6 +514,7 @@ static void press_sticky_keys(KeyWidget *key_widget, int on)
                         key_event_new(&sticky_key->key_event, keysym);
                         key_event_press(&sticky_key->key_event);
                 } else {
+                        key_event_new(&sticky_key->key_event, keysym);
                         key_event_release(&sticky_key->key_event);
                         key_event_free(&sticky_key->key_event);
                         sticky_key->active = FALSE;
@@ -511,6 +523,35 @@ static void press_sticky_keys(KeyWidget *key_widget, int on)
         }
         if (old_shifted != key_shifted)
                 update_shifted(key_widget);
+}
+
+static gboolean notify_event(GtkWidget *widget, GdkEventCrossing *event,
+                             KeyWidget *key_widget)
+/* Press or release modifier keys depending on pointer location */
+{
+        int i;
+
+        for (i = 0; i < key_widget->len; i++) {
+                Key *sticky_key = key_widget->keys + i;
+                int keysym;
+
+                if (!(sticky_key->flags & KEY_STICKY) || !sticky_key->active)
+                        continue;
+                keysym = sticky_key->keysym;
+                if (is_shifted(sticky_key))
+                        keysym = sticky_key->keysym_shift;
+                if (!keysym)
+                        continue;
+                if (event->type == GDK_LEAVE_NOTIFY) {
+                        key_event_new(&sticky_key->key_event, keysym);
+                        key_event_press_force(&sticky_key->key_event);
+                } else {
+                        key_event_new(&sticky_key->key_event, keysym);
+                        key_event_release_force(&sticky_key->key_event);
+                        key_event_free(&sticky_key->key_event);
+                }
+        }
+        return FALSE;
 }
 
 gboolean key_widget_button_press(GtkWidget *widget, GdkEventButton *event,
@@ -554,6 +595,7 @@ gboolean key_widget_button_press(GtkWidget *widget, GdkEventButton *event,
                         key_event_new(&key->key_event, keysym);
                         key_event_press(&key->key_event);
                 } else {
+                        key_event_new(&key->key_event, keysym);
                         key_event_release(&key->key_event);
                         key_event_free(&key->key_event);
                 }
@@ -931,8 +973,12 @@ KeyWidget *key_widget_new_full(void)
                          G_CALLBACK(key_widget_button_press), key_widget);
         g_signal_connect(G_OBJECT(drawing_area), "button_release_event",
                          G_CALLBACK(key_widget_button_release), key_widget);
-        g_signal_connect(G_OBJECT(drawing_area), "style-set",
+        g_signal_connect(G_OBJECT(drawing_area), "style_set",
                          G_CALLBACK(style_set), key_widget);
+        g_signal_connect(G_OBJECT(drawing_area), "enter_notify_event",
+                         G_CALLBACK(notify_event), key_widget);
+        g_signal_connect(G_OBJECT(drawing_area), "leave_notify_event",
+                         G_CALLBACK(notify_event), key_widget);
         gtk_widget_set_events(drawing_area, GDK_EXPOSURE_MASK |
                                             GDK_BUTTON_PRESS_MASK |
                                             GDK_BUTTON_RELEASE_MASK);
