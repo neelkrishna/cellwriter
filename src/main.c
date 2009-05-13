@@ -618,6 +618,7 @@ int profile_line, log_level = 4;
 
 static char *log_filename = NULL;
 static FILE *log_file = NULL;
+static int ignore_fifo;
 
 /* Profile commands table */
 static struct {
@@ -662,6 +663,8 @@ static GOptionEntry command_line_opts[] = {
           "Do not save changes to the profile", NULL },
         { "disable-overwrite", 0, 0, G_OPTION_ARG_NONE, &key_disable_overwrite,
           "Do not modify the keymap", NULL },
+        { "ignore-fifo", 0, 0, G_OPTION_ARG_NONE, &ignore_fifo,
+          "Allow starting a second instance", NULL },
 
         /* Sentinel */
         { NULL, 0, 0, 0, NULL, NULL, NULL }
@@ -866,7 +869,7 @@ int main(int argc, char *argv[])
         /* See if the program is already running */
         g_message("Starting " PACKAGE_STRING);
         create_user_dir();
-        if (!window_embedded) {
+        if (!window_embedded && !ignore_fifo) {
                 const char *msg;
 
                 msg = "2";
