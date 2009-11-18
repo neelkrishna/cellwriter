@@ -4334,7 +4334,7 @@ else
 $as_echo "$as_me: GNOME support disabled with --without-gnome" >&6;}
 fi
 
-# Xtest extension
+# Xlib and Xtest extension
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for X" >&5
 $as_echo_n "checking for X... " >&6; }
@@ -4527,6 +4527,54 @@ else
 	ac_x_libraries='$x_libraries'"
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: libraries $x_libraries, headers $x_includes" >&5
 $as_echo "libraries $x_libraries, headers $x_includes" >&6; }
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XChangeKeyboardMapping in -lX11" >&5
+$as_echo_n "checking for XChangeKeyboardMapping in -lX11... " >&6; }
+if test "${ac_cv_lib_X11_XChangeKeyboardMapping+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lX11  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char XChangeKeyboardMapping ();
+int
+main ()
+{
+return XChangeKeyboardMapping ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_X11_XChangeKeyboardMapping=yes
+else
+  ac_cv_lib_X11_XChangeKeyboardMapping=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_X11_XChangeKeyboardMapping" >&5
+$as_echo "$ac_cv_lib_X11_XChangeKeyboardMapping" >&6; }
+if test "x$ac_cv_lib_X11_XChangeKeyboardMapping" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBX11 1
+_ACEOF
+
+  LIBS="-lX11 $LIBS"
+
+else
+  as_fn_error "X11 library not found or outdated!
+                  Please install the latest libx11-dev package." "$LINENO" 5
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XTestFakeKeyEvent in -lXtst" >&5

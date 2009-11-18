@@ -79,8 +79,8 @@ int window_force_x = -1, window_force_y = -1, training_block = 0,
 static char *tab_xpm[] =
 {
         "7 4 2 1",
-        " 	c None",
-        ".	c #000000",
+        "         c None",
+        ".        c #000000",
         ".......",
         " ..... ",
         "  ...  ",
@@ -145,15 +145,15 @@ static void update_struts(void)
          scan down from the top of the screen. GOK and other applications
          somehow get around this but I can't figure out how. */
 {
-	static guint32 struts[12];
-	guint32 new2 = 0, new3 = 0, new9 = 0, new11 = 0;
-	GdkAtom atom_strut, atom_strut_partial, cardinal;
+        static gulong struts[12];
+        guint32 new2 = 0, new3 = 0, new9 = 0, new11 = 0;
+        GdkAtom atom_strut, atom_strut_partial, cardinal;
 
-	if (!window || !window->window || !window_struts)
-	        return;
-	if (window_docked == WINDOW_DOCKED_TOP) {
-	        new2 = window_frame.y + window_frame.height;
-	        new9 = window_frame.width;
+        if (!window || !window->window || !window_struts)
+                return;
+        if (window_docked == WINDOW_DOCKED_TOP) {
+                new2 = window_frame.y + window_frame.height;
+                new9 = window_frame.width;
         } else if (window_docked == WINDOW_DOCKED_BOTTOM) {
                 new3 = window_frame.height;
                 new11 = window_frame.width;
@@ -166,14 +166,14 @@ static void update_struts(void)
         struts[3] = new3;
         struts[9] = new9;
         struts[11] = new11;
-	atom_strut = gdk_atom_intern("_NET_WM_STRUT", FALSE),
-	atom_strut_partial = gdk_atom_intern("_NET_WM_STRUT_PARTIAL", FALSE);
-	cardinal = gdk_atom_intern("CARDINAL", FALSE);
-	gdk_property_change(GDK_WINDOW(window->window), atom_strut, cardinal,
-        	            32, GDK_PROP_MODE_REPLACE, (guchar*)&struts, 4);
-	gdk_property_change(GDK_WINDOW(window->window), atom_strut_partial,
-	                    cardinal, 32, GDK_PROP_MODE_REPLACE,
-	                    (guchar*)&struts, 12);
+        atom_strut = gdk_atom_intern("_NET_WM_STRUT", FALSE),
+        atom_strut_partial = gdk_atom_intern("_NET_WM_STRUT_PARTIAL", FALSE);
+        cardinal = gdk_atom_intern("CARDINAL", FALSE);
+        gdk_property_change(GDK_WINDOW(window->window), atom_strut, cardinal,
+                            32, GDK_PROP_MODE_REPLACE, (guchar*)&struts, 4);
+        gdk_property_change(GDK_WINDOW(window->window), atom_strut_partial,
+                            cardinal, 32, GDK_PROP_MODE_REPLACE,
+                            (guchar*)&struts, 12);
 }
 
 static void set_geometry_hints(void)

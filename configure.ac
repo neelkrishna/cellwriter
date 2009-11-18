@@ -64,8 +64,11 @@ else
         AC_MSG_NOTICE([GNOME support disabled with --without-gnome])
 fi
 
-# Xtest extension
+# Xlib and Xtest extension
 AC_PATH_X
+AC_CHECK_LIB(X11, XChangeKeyboardMapping, [],
+             [AC_ERROR(X11 library not found or outdated!
+                  Please install the latest libx11-dev package.)])
 AC_CHECK_LIB(Xtst, XTestFakeKeyEvent, [],
              [AC_ERROR(XTest library not found or outdated!
                   Please install the latest libxtst6-dev package.)])
