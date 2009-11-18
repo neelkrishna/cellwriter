@@ -212,12 +212,12 @@ void status_icon_create(void)
         icon_path = g_build_filename(DATADIR, ICON_PATH PACKAGE ".svg", NULL);
         if (!(pixbuf = gdk_pixbuf_new_from_file(icon_path, &error))) {
                 status_icon = NULL;
-                g_warning(error->message);
-                g_warning("Failed to load status icon '%s'", icon_path);
+                g_warning("Failed to load status icon '%s': %s",
+                          icon_path, error->message);
                 return;
         }
         status_icon = G_OBJECT(gtk_status_icon_new_from_pixbuf(pixbuf));
-	g_object_unref(pixbuf);
+        g_object_unref(pixbuf);
         g_signal_connect(status_icon, "activate",
                          G_CALLBACK(status_icon_activate), NULL);
         g_signal_connect(status_icon, "popup-menu",
@@ -226,4 +226,3 @@ void status_icon_create(void)
 }
 
 #endif /* !USING_LIBEGG */
-
