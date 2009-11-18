@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.61)
+AC_PREREQ(2.64)
 AC_INIT([CellWriter], [1.3.5], [risujin@risujin.org])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/main.c])
@@ -24,12 +24,6 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_CPP
 AC_PROG_MKDIR_P
-
-# Xtest extension
-AC_PATH_X
-AC_CHECK_LIB(Xtst, XTestFakeKeyEvent, [],
-             [AC_ERROR(XTest library not found or outdated!
-                  Please install the latest libxtst-dev package.)])
 
 # Math library
 AC_CHECK_LIB(m, atan2, [], [AC_ERROR(Math library not installed or invalid!)])
@@ -70,6 +64,12 @@ else
         AC_MSG_NOTICE([GNOME support disabled with --without-gnome])
 fi
 
+# Xtest extension
+AC_PATH_X
+AC_CHECK_LIB(Xtst, XTestFakeKeyEvent, [],
+             [AC_ERROR(XTest library not found or outdated!
+                  Please install the latest libxtst6-dev package.)])
+
 # Checks for header files
 AC_HEADER_STDC
 
@@ -85,4 +85,3 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memmove memset sqrt strcasecmp])
 
 AC_OUTPUT(Makefile)
-

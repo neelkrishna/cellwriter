@@ -996,10 +996,10 @@ void unicode_block_toggle(int block, int on)
 */
 
 #define WELCOME_MSG "You are either starting " PACKAGE_NAME " for the first " \
-                    "time or have not yet created any training samples.\n\n" \
+                    "time or have not yet created any training samples. " \
                     PACKAGE_NAME " requires accurate training samples of " \
-                    "your characters before it can work.\n\n" \
-                    PACKAGE_NAME " will now enter training mode. " \
+                    "your characters before it can work. " \
+                    "The program will now enter training mode. " \
                     "Carefully draw each character in its cell and then " \
                     "press the 'Train' button."
 
@@ -1022,4 +1022,3 @@ void startup_splash_show(void)
         /* Press in the training button for the user */
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(train_button), TRUE);
 }
-

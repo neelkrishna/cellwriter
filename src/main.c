@@ -375,9 +375,9 @@ static int move_file(char *from, char *to)
                 gsize bytes_read, bytes_written;
 
                 /* Read a block in */
-                g_io_channel_read_chars(src_channel, buffer, sizeof (buffer),
-                                        &bytes_read, &error);
-                if (bytes_read < 1 || error)
+                if (g_io_channel_read_chars(src_channel, buffer,
+                                            sizeof (buffer), &bytes_read,
+                                            &error) != G_IO_STATUS_NORMAL)
                         break;
 
                 /* Write the block out */
@@ -979,4 +979,3 @@ int main(int argc, char *argv[])
 
         return 0;
 }
-
