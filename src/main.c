@@ -851,7 +851,8 @@ int main(int argc, char *argv[])
         /* Initialize GTK+ */
         error = NULL;
         if (!gtk_init_with_args(&argc, &argv,
-                                "grid-entry handwriting input panel",
+                                "- Grid-entry handwriting input panel "
+                                "(version " PACKAGE_VERSION ")",
                                 command_line_opts, NULL, &error))
                 return 0;
 
