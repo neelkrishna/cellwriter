@@ -322,7 +322,7 @@ int key_widget_update_colors(void)
         color_bg = window->style->bg[0];
         if (style_colors) {
                 color_keys = window->style->dark[3];
-                color_text = window->style->fg[3];
+                //color_text = window->style->fg[3];
         }
         shade_gdk_color(&color_keys, &color_keys_dark, 0.67);
         shade_gdk_color(&color_keys, &color_keys_on, 0.75);

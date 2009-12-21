@@ -321,6 +321,21 @@ void window_set_docked(int mode)
         set_geometry_hints();
         cell_widget_pack();
         key_widget_resize(key_widget);
+        
+        /* Set window docking hints.
+           FIXME This allegedly solves docking problems with some window
+                 managers but only seems to cause more problems for
+                 Compiz and Metacity. */
+        /*
+        gtk_widget_hide(window);
+        if (mode == WINDOW_UNDOCKED) 
+                gtk_window_set_type_hint(GTK_WINDOW(window),
+                                         GDK_WINDOW_TYPE_HINT_NORMAL);
+        else
+                gtk_window_set_type_hint(GTK_WINDOW(window),
+                                         GDK_WINDOW_TYPE_HINT_DOCK);
+        gtk_widget_show(window);
+        */
 
         /* Restore the old window position */
         if (!mode) {
@@ -566,11 +581,6 @@ void window_create(void)
                          G_CALLBACK(window_configure), NULL);
         gtk_window_set_accept_focus(GTK_WINDOW(window), FALSE);
         gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
-
-        /* This hint was alleged to fix the strut problems with metacity but
-           doesn't and only causes the window to overlap the docked panels */
-        /*gtk_window_set_type_hint(GTK_WINDOW(window),
-                                 GDK_WINDOW_TYPE_HINT_DOCK);*/
 
         /* Tooltips */
         tooltips = gtk_tooltips_new();
