@@ -104,15 +104,19 @@ static void release_keycode(KeyCode k)
 static void press_keycode(KeyCode k)
 /* Called from various places to generate a key-down event */
 {
-        if (k >= key_min && k <= key_max)
+        if (k >= key_min && k <= key_max) {
                 XTestFakeKeyEvent(GDK_DISPLAY(), k, True, 1);
+                XSync(GDK_DISPLAY(), False);
+        }
 }
 
 static void release_keycode(KeyCode k)
 /* Called from various places to generate a key-up event */
 {
-        if (k >= key_min && k <= key_max)
+        if (k >= key_min && k <= key_max) {
                 XTestFakeKeyEvent(GDK_DISPLAY(), k, False, 1);
+                XSync(GDK_DISPLAY(), False);
+        }
 }
 
 #endif
@@ -517,4 +521,3 @@ void key_event_cleanup(void)
 {
         cleanup_usable();
 }
-
