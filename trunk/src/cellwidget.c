@@ -1821,7 +1821,7 @@ void cell_widget_train(void)
 
         /* Preset all of the characters for training */
         for (i = 0, pos = 0; i < range; i++) {
-                short ch;
+                unsigned short ch;
 
                 ch = block->start + i;
                 if (char_disabled(ch))
@@ -2143,4 +2143,3 @@ void cell_widget_cleanup(void)
         if (pango)
                 g_object_unref(pango);
 }
-
