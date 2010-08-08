@@ -80,7 +80,7 @@ int single_instance_init(SingleInstanceFunc func, const char *str)
            have a reader process already running. We send it a one-byte
            message and quit. */
         if ((fifo = open(path, O_WRONLY | O_NONBLOCK)) > 0) {
-                write(fifo, str, 1);
+                size_t written = write(fifo, str, 1);
                 close(fifo);
                 return TRUE;
         }
@@ -108,4 +108,3 @@ int single_instance_init(SingleInstanceFunc func, const char *str)
 	g_io_add_watch(io_channel, G_IO_IN, on_fifo_input, NULL);
         return FALSE;
 }
-
