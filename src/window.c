@@ -220,6 +220,9 @@ static void docked_move_resize(void)
         cell_widget_pack();
         key_widget_resize(key_widget);
         trace("y=%d", y);
+        if (window_struts)
+                gdk_window_set_type_hint(GDK_WINDOW(window->window),
+                                         GDK_WINDOW_TYPE_HINT_DOCK);
 }
 
 static gboolean window_configure(GtkWidget *widget, GdkEventConfigure *event)
@@ -321,14 +324,14 @@ void window_set_docked(int mode)
         set_geometry_hints();
         cell_widget_pack();
         key_widget_resize(key_widget);
-        
+
         /* Set window docking hints.
            FIXME This allegedly solves docking problems with some window
                  managers but only seems to cause more problems for
                  Compiz and Metacity. */
         /*
         gtk_widget_hide(window);
-        if (mode == WINDOW_UNDOCKED) 
+        if (mode == WINDOW_UNDOCKED)
                 gtk_window_set_type_hint(GTK_WINDOW(window),
                                          GDK_WINDOW_TYPE_HINT_NORMAL);
         else
