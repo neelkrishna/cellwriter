@@ -3,9 +3,6 @@
 /* URL launched when the Help button is clicked */
 #undef CELLWRITER_URL
 
-/* GNOME support */
-#undef HAVE_GNOME
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

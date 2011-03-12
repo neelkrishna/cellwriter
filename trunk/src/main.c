@@ -2,7 +2,7 @@
 /*
 
 cellwriter -- a character recognition input method
-Copyright (C) 2007 Michael Levin <risujin@risujin.org>
+Copyright (C) 2007 Michael Levin <risujin@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,9 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <signal.h>
 #include <stdio.h>
 #include <errno.h>
-#ifdef HAVE_GNOME
-#include <libgnome/libgnome.h>
-#endif
 
 /* recognize.c */
 extern int strength_sum;
@@ -885,12 +882,6 @@ int main(int argc, char *argv[])
                         return 0;
                 }
         }
-
-#ifdef HAVE_GNOME
-        /* Initialize GNOME for the Help button */
-        gnome_program_init(PACKAGE, VERSION, LIBGNOME_MODULE,
-                           argc, argv, NULL);
-#endif
 
         /* Component initilization */
         if (key_event_init()) {

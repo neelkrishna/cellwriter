@@ -1,6 +1,6 @@
 
-INCLUDES = @GTK_CFLAGS@ @GNOME_CFLAGS@
-LDADD = @GTK_LIBS@ @GNOME_LIBS@
+INCLUDES = @GTK_CFLAGS@
+LDADD = @GTK_LIBS@
 AM_CFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 
 bin_PROGRAMS = cellwriter
@@ -67,4 +67,3 @@ dist_cellwriterman_DATA = cellwriter.1
 EXTRA_DIST = \
         test/test.c \
         test/Makefile
-

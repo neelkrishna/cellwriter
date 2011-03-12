@@ -2,7 +2,7 @@
 /*
 
 cellwriter -- a character recognition input method
-Copyright (C) 2007 Michael Levin <risujin@risujin.org>
+Copyright (C) 2007 Michael Levin <risujin@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -297,4 +297,3 @@ void engine_prep(void)
         for (i = 0; i < PREP_SAMPLES && list[i]; i++)
                 list[i]->disqualified = FALSE;
 }
-
