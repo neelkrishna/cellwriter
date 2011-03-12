@@ -2,7 +2,7 @@
 /*
 
 cellwriter -- a character recognition input method
-Copyright (C) 2007 Michael Levin <risujin@risujin.org>
+Copyright (C) 2007 Michael Levin <risujin@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -443,4 +443,3 @@ void sample_strokes(Stroke *a, Stroke *b, Stroke **as, Stroke **bs)
         *as = sample_stroke(NULL, a, points, points);
         *bs = sample_stroke(NULL, b, points, points);
 }
-

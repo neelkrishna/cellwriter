@@ -2,7 +2,7 @@
 /*
 
 cellwriter -- a character recognition input method
-Copyright (C) 2007 Michael Levin <risujin@risujin.org>
+Copyright (C) 2007 Michael Levin <risujin@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -985,4 +985,3 @@ KeyWidget *key_widget_new_full(void)
 
         return key_widget;
 }
-

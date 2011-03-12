@@ -48,22 +48,6 @@ if test x$with_gtkstatusicon = xno; then
 fi
 AM_CONDITIONAL([GTKSTATUSICON], [test x$with_gtkstatusicon != xno])
 
-# GNOME2
-AC_ARG_WITH(gnome, AC_HELP_STRING([--without-gnome],
-	                          [don't build with GNOME support]))
-if test "x$with_gnome" != "xno"; then
-        AC_CHECK_LIB(gnome-2, gnome_url_show,
-                     [PKG_CHECK_MODULES(GNOME, libgnome-2.0,
-                                        [AC_DEFINE(HAVE_GNOME, [],
-                                                   [GNOME support])])
-                      AC_SUBST(GNOME_CFLAGS)
-                      AC_SUBST(GNOME_LIBS)],
-                     [AC_MSG_NOTICE(GNOME library not found or outdated!
-           Please install the latest libgnome2-dev package.)])
-else
-        AC_MSG_NOTICE([GNOME support disabled with --without-gnome])
-fi
-
 # Xlib and Xtest extension
 AC_PATH_X
 AC_CHECK_LIB(X11, XChangeKeyboardMapping, [],
@@ -71,7 +55,7 @@ AC_CHECK_LIB(X11, XChangeKeyboardMapping, [],
                   Please install the latest libx11-dev package.)])
 AC_CHECK_LIB(Xtst, XTestFakeKeyEvent, [],
              [AC_ERROR(XTest library not found or outdated!
-                  Please install the latest libxtst6-dev package.)])
+                  Please install the latest libxtst-dev package.)])
 
 # Checks for header files
 AC_HEADER_STDC

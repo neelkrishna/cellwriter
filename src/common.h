@@ -2,7 +2,7 @@
 /*
 
 cellwriter -- a character recognition input method
-Copyright (C) 2007 Michael Levin <risujin@risujin.org>
+Copyright (C) 2007 Michael Levin <risujin@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -286,4 +286,3 @@ static inline void vec2_from_angle(Vec2 *dest, ANGLE angle, float mag)
 	dest->y = sinf(angle * M_PI / ANGLE_PI) * mag;
 	dest->x = cosf(angle * M_PI / ANGLE_PI) * mag;
 }
-

@@ -2,7 +2,7 @@
 /*
 
 cellwriter -- a character recognition input method
-Copyright (C) 2007 Michael Levin <risujin@risujin.org>
+Copyright (C) 2007 Michael Levin <risujin@gmail.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,9 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "recognize.h"
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_GNOME
-#include <libgnome/libgnome.h>
-#endif
 
 /* preprocess.c */
 int ignore_stroke_dir, ignore_stroke_num;
@@ -286,17 +283,16 @@ static void style_colors_changed(void)
 #endif
 }
 
-#ifdef HAVE_GNOME
-
+#if GTK_CHECK_VERSION(2, 14, 0)
 static void help_clicked(void)
 {
         GError *error = NULL;
 
-        gnome_url_show(CELLWRITER_URL, &error);
+        gtk_show_uri(gdk_screen_get_default(), CELLWRITER_URL, GDK_CURRENT_TIME,
+                     &error);
         if (error)
                 g_warning("Failed to launch help: %s", error->message);
 }
-
 #endif
 
 static GtkWidget *create_color_table(void)
@@ -378,7 +374,7 @@ static void create_dialog(void)
         gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, TRUE, 0);
         gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox), GTK_BUTTONBOX_END);
 
-#ifdef HAVE_GNOME
+#if GTK_CHECK_VERSION(2, 14, 0)
         /* Help button */
         gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox), GTK_BUTTONBOX_EDGE);
         w = gtk_button_new_from_stock(GTK_STOCK_HELP);
@@ -699,4 +695,3 @@ void options_dialog_open(void)
         create_dialog();
         gtk_widget_show_all(options_dialog);
 }
-
