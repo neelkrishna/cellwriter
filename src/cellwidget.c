@@ -1475,13 +1475,9 @@ static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 #endif
 
         /* If we are getting invalid output from this device with XInput
-           enabled, try disabling it */
-        if ((x < 0 || x > drawing_area->allocation.width ||
-             y < 0 || y > drawing_area->allocation.width) &&
-            event->device->mode != GDK_MODE_DISABLED && xinput_enabled) {
-                g_warning("Extended input device is generating invalid "
-                          "coordinates, disabled");
-                gdk_device_set_mode(event->device, GDK_MODE_DISABLED);
+           enabled, ignore it */
+        if (x < 0 || x > drawing_area->allocation.width ||
+            y < 0 || y > drawing_area->allocation.width) {
                 return TRUE;
         }
 
@@ -1641,28 +1637,6 @@ static gboolean expose_event(GtkWidget *widget, GdkEventExpose *event)
 static gboolean enter_notify_event(GtkWidget *widget, GdkEventCrossing *event)
 {
         check_cell(event->x, event->y, NULL);
-        return FALSE;
-}
-
-static gboolean leave_notify_event(GtkWidget *widget, GdkEventCrossing *event)
-{
-        /* Tablet PC gets grab leave-notify event when starting to draw.
-           Ignore this if we are still drawing. */
-        if (event->mode == GDK_CROSSING_GRAB || drawing || cross_out)
-                return FALSE;
-
-        old_cc = current_cell;
-        current_cell = -1;
-        finish_cell(old_cc);
-        if (inserting) {
-                inserting = FALSE;
-                dirty_cell(old_cc);
-                dirty_cell(old_cc - 1);
-        }
-        invalid = TRUE;
-        cell_widget_set_cursor(FALSE);
-        render_dirty();
-        start_timeout();
         return FALSE;
 }
 
@@ -2062,12 +2036,12 @@ GtkWidget *cell_widget_new(void)
                          G_CALLBACK(motion_notify_event), NULL);
         g_signal_connect(G_OBJECT(drawing_area), "enter_notify_event",
                          G_CALLBACK(enter_notify_event), NULL);
-        g_signal_connect(G_OBJECT(drawing_area), "leave_notify_event",
-                         G_CALLBACK(leave_notify_event), NULL);
         g_signal_connect(G_OBJECT(drawing_area), "scroll_event",
                          G_CALLBACK(scroll_event), NULL);
         g_signal_connect(G_OBJECT(drawing_area), "style-set",
                          G_CALLBACK(cell_widget_update_colors), NULL);
+        // Do not listen to leave_notify_event, after a certain GTK version
+        // it fires for just about anything you do on the screen.
         gtk_widget_set_events(drawing_area,
                               GDK_EXPOSURE_MASK |
                               GDK_BUTTON_PRESS_MASK |
@@ -2075,7 +2049,6 @@ GtkWidget *cell_widget_new(void)
                               GDK_POINTER_MOTION_MASK |
                               GDK_POINTER_MOTION_HINT_MASK |
                               GDK_ENTER_NOTIFY_MASK |
-                              GDK_LEAVE_NOTIFY_MASK |
                               GDK_SCROLL_MASK);
 
         /* Update colors */

@@ -36,6 +36,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Define this to print key events without actually generating them */
 /* #define DEBUG_KEY_EVENTS */
 
+/* Note about libfakekey: this library does very much the same thing as this
+   code and is now packaged in Ubuntu. However, it is hardcoded to "recycle"
+   only 10 keycodes rather than cycling through all unused keys as this code
+   does. This is sufficient only for periodic single key-presses. If a user
+   handwrites a long paragraph of Unicode characters, we want to be able to
+   accomodate as many as we can. */
+
 /*
         X11 KeyCodes
 */
