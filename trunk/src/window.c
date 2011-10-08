@@ -504,6 +504,7 @@ gboolean window_close(void)
                 key_widget_cleanup(key_widget);
                 return TRUE;
         }
+        g_debug("Status icon failed to embed, quitting.");
         return FALSE;
 }
 
@@ -563,6 +564,15 @@ static void buffer_button_pressed(void)
 static void print_window_xid(GtkWidget *widget)
 {
         g_print("%d\n", (unsigned int)GDK_WINDOW_XID(widget->window));
+}
+
+static gint status_icon_embedded_check() {
+        if (!status_icon_embedded()) {
+                g_debug("Status icon failed to embed, showing window.");
+                window_shown = TRUE;
+                gtk_widget_show(window);
+        }
+        return FALSE;
 }
 
 void window_create(void)
@@ -795,8 +805,13 @@ void window_create(void)
                 window_shown = FALSE;
         else if (window_force_show)
                 window_shown = TRUE;
-        if (window_shown || !status_icon_embedded())
+        if (window_shown) {
                 gtk_widget_show(window);
+        } else {
+                /* Check if the status icon is embedded after a timeout so that
+                   it has a chance to embed itself into the tray. */
+                gtk_timeout_add(10, status_icon_embedded_check, NULL);
+        }
 }
 
 void window_sync(void)

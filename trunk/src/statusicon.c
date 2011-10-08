@@ -43,14 +43,6 @@ int status_menu_left_click = FALSE;
 static GtkWidget *status_menu, *status_menu_show = NULL;
 static GObject *status_icon = NULL;
 
-int status_icon_embedded(void)
-{
-        /* FIXME Doesn't actually test if the icon is embedded because this
-                 function is called before the icon has had a chance to
-                 embed! */
-        return status_icon != NULL;
-}
-
 #ifdef USING_LIBEGG
 static void position_menu_libegg(GtkMenu *menu, int *x, int *y,
                                  gboolean *push_in, gpointer user_data)
@@ -58,21 +50,21 @@ static void position_menu_libegg(GtkMenu *menu, int *x, int *y,
 {
         GdkScreen *screen;
         GtkWidget *tray_icon = GTK_WIDGET(status_icon);
-	GtkRequisition req;
-	gint menu_xpos, menu_ypos;
+        GtkRequisition req;
+        gint menu_xpos, menu_ypos;
 
-	gtk_widget_size_request(GTK_WIDGET(menu), &req);
-	gdk_window_get_origin(tray_icon->window, &menu_xpos, &menu_ypos);
-	menu_xpos += tray_icon->allocation.x;
-	menu_ypos += tray_icon->allocation.y;
+        gtk_widget_size_request(GTK_WIDGET(menu), &req);
+        gdk_window_get_origin(tray_icon->window, &menu_xpos, &menu_ypos);
+        menu_xpos += tray_icon->allocation.x;
+        menu_ypos += tray_icon->allocation.y;
         screen = gtk_widget_get_screen(tray_icon);
-	if (menu_ypos > gdk_screen_get_height(screen) / 2)
-		menu_ypos -= req.height;
-	else
-		menu_ypos += tray_icon->allocation.height;
-	*x = menu_xpos;
-	*y = menu_ypos;
-	*push_in = TRUE;
+        if (menu_ypos > gdk_screen_get_height(screen) / 2)
+                menu_ypos -= req.height;
+        else
+                menu_ypos += tray_icon->allocation.height;
+        *x = menu_xpos;
+        *y = menu_ypos;
+        *push_in = TRUE;
 }
 #define POSITION_MENU_FUNC position_menu_libegg
 #else
@@ -172,19 +164,27 @@ void status_icon_create(void)
 
         /* Use the libegg tray icon to create a status icon in the tray */
         status_icon = G_OBJECT(egg_tray_icon_new(PACKAGE_NAME));
-	box = gtk_event_box_new();
+        box = gtk_event_box_new();
 
         /* Create the system tray icon */
         icon_path = g_build_filename(DATADIR, ICON_PATH PACKAGE ".svg", NULL);
         status_image = gtk_image_new_from_icon_name(PACKAGE,
                                                    GTK_ICON_SIZE_SMALL_TOOLBAR);
-	gtk_container_add(GTK_CONTAINER(box), status_image);
-	gtk_container_add(GTK_CONTAINER(status_icon), box);
-	gtk_widget_show_all(GTK_WIDGET(status_icon));
+        gtk_container_add(GTK_CONTAINER(box), status_image);
+        gtk_container_add(GTK_CONTAINER(status_icon), box);
+        gtk_widget_show_all(GTK_WIDGET(status_icon));
         g_signal_connect(G_OBJECT(box), "button-press-event",
                          G_CALLBACK(button_press_event), NULL);
         g_signal_connect(G_OBJECT(status_icon), "size-allocate",
                          G_CALLBACK(status_icon_size_allocate), NULL);
+}
+
+int status_icon_embedded(void)
+{
+        /* FIXME Doesn't actually test if the icon is embedded because this
+                 function is called before the icon has had a chance to
+                 embed! */
+        return status_icon != NULL;
 }
 
 #else /* USING_LIBEGG */
@@ -223,6 +223,11 @@ void status_icon_create(void)
         g_signal_connect(status_icon, "popup-menu",
                          G_CALLBACK(status_menu_popup), NULL);
         gtk_status_icon_set_visible(GTK_STATUS_ICON(status_icon), TRUE);
+}
+
+int status_icon_embedded(void)
+{
+        return status_icon != NULL && gtk_status_icon_is_embedded(status_icon);
 }
 
 #endif /* !USING_LIBEGG */
