@@ -147,7 +147,7 @@ typedef struct {
 
 typedef struct {
         int used;
-        gunichar2 ch;
+        gunichar ch;
         unsigned short len;
         short rating, ratings[ENGINES];
         unsigned char enabled, disqualified, processed;
@@ -169,14 +169,14 @@ void process_sample(Sample *sample);
 void center_samples(Vec2 *ac_to_bc, Sample *a, Sample *b);
 int sample_disqualified(const Sample *sample);
 int sample_valid(const Sample *sample, int used);
-int char_trained(int ch);
-int char_disabled(int ch);
+int char_trained(gunichar ch);
+int char_disabled(gunichar ch);
 
 /* Processing */
 void clear_sample(Sample *sample);
 void recognize_sample(Sample *cell, Sample **alts, int num_alts);
 void train_sample(const Sample *cell, int trusted);
-void untrain_char(int ch);
+void untrain_char(gunichar ch);
 void update_enabled_samples(void);
 void promote_sample(Sample *sample);
 void demote_sample(Sample *sample);
