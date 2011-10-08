@@ -57,7 +57,7 @@ static void stop_drawing(void);
 
 struct Cell {
         Sample sample, *alts[ALTERNATES];
-        gunichar2 ch;
+        gunichar ch;
         int alt_used[ALTERNATES];
         char flags, alt_ratings[ALTERNATES];
 };
@@ -86,7 +86,7 @@ static cairo_t *cairo = NULL;
 static PangoContext *pango = NULL;
 static PangoFontDescription *pango_font_desc = NULL;
 static KeyWidget *key_widget;
-static gunichar2 *history[HISTORY_MAX];
+static gunichar *history[HISTORY_MAX];
 static int cell_cols, cell_rows, cell_row_view = 0, current_cell = -1, old_cc,
            cell_cols_saved, cell_rows_saved, cell_row_view_saved,
            timeout_source,
@@ -1795,7 +1795,7 @@ void cell_widget_train(void)
 
         /* Preset all of the characters for training */
         for (i = 0, pos = 0; i < range; i++) {
-                unsigned short ch;
+                gunichar ch;
 
                 ch = block->start + i;
                 if (char_disabled(ch))
@@ -1845,7 +1845,7 @@ void cell_widget_pack(void)
 
 int cell_widget_insert(void)
 {
-        gunichar2 *utf16;
+        gunichar *utf16;
         int i, j, slot, chars;
 
         if (training)
@@ -1911,7 +1911,7 @@ static void buffer_menu_deactivate(GtkMenuShell *shell, GtkWidget *button)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), FALSE);
 }
 
-static void buffer_menu_item_activate(GtkWidget *widget, gunichar2 *history)
+static void buffer_menu_item_activate(GtkWidget *widget, gunichar *history)
 {
         int i;
 

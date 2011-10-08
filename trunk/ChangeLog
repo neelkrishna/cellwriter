@@ -1,3 +1,34 @@
+2011-10-08  Michael Levin  <risujin@gmail.com>
+
+        Updates from SVN through r26:
+        * Allow entering Unicode blocks greater than 0xFFFF.
+        * Fixed multiple stroke inputs not working in the latest version of
+          Ubuntu.
+        * Updated email address.
+        * Removed GNOME dependency in favor of gtk_show_uri(). Without GNOME or
+          GTK 2.14 you just won't get the "help" button.
+        * Turkish translation for Desktop file (thanks ozbekanil!).
+        * Turn on window hints if struts are on, this seems to help people with
+          certain window managers (thanks Ronald)
+        * Fix for Korean languages
+        * Key text is now always white
+        * Window struts fix on 64-bit machines (thank you Huang Ying!)
+        * Add explicit libx11 dependency for binutils-gold
+        * Possible fix for profile not being saved correctly. Return code was
+          not being correctly checked.
+        * Added --ignore-fifo option to force starting a second instance.
+        * Sticky keys (shifts) now activate when the mouse pointer is outside of
+          the keyboard area so you can shift-click in GIMP etc.
+        * Removed 1hz polling of fifo, now checks for input using a GLib watch
+          (thanks to Thomas Jaeger for the patch!)
+        * CellWriter will toggle the main window when a second instance is
+          started instead of forcing the window to show. The --show-window and
+          --hide-window arguments can be used to force the window to show or
+          hide respectively. Thanks to Mattias Runge for the suggestion that
+          this was needed.
+
+        * Revision 1.3.5
+
 2008-05-28  Michael Levin  <risujin@risujin.org>
 
         * stroke.c, averages.c: Fixed two memory leaks
@@ -215,4 +246,3 @@
 2007-08-22  Michael Levin  <risujin@risujin.org>
 
         * Initial release 1.0.0
-

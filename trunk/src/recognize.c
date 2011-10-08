@@ -275,7 +275,7 @@ void center_samples(Vec2 *ac_to_bc, Sample *a, Sample *b)
         vec2_sub(ac_to_bc, &b->center, &a->center);
 }
 
-int char_disabled(int ch)
+int char_disabled(gunichar ch)
 /* Returns TRUE if a character is not renderable or is explicity disabled by
    a setting (not counting disabled Unicode blocks) */
 {
@@ -607,7 +607,7 @@ void train_sample(const Sample *sample, int trusted)
         insert_sample(&new_sample, TRUE);
 }
 
-int char_trained(int ch)
+int char_trained(gunichar ch)
 /* Count the number of samples for this character */
 {
         Sample *sample;
@@ -622,7 +622,7 @@ int char_trained(int ch)
         return count;
 }
 
-void untrain_char(int ch)
+void untrain_char(gunichar ch)
 /* Delete all samples for a character */
 {
         Sample *sample;

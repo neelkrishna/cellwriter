@@ -959,8 +959,30 @@ UnicodeBlock unicode_blocks[] =
         { FALSE, 0xFE70, 0xFEFF, "Arabic Presentation Forms-B" },
         { FALSE, 0xFF00, 0xFFEF, "Halfwidth and Fullwidth Forms" },
         { FALSE, 0xFFF0, 0xFFFF, "Specials" },
+        { FALSE, 0x10000, 0x1007F, "Linear B Syllabary" },
+        { FALSE, 0x10080, 0x100FF, "Linear B Ideograms" },
+        { FALSE, 0x10100, 0x1013F, "Aegean Numbers" },
+        { FALSE, 0x10140, 0x1018F, "Ancient Greek Numbers" },
+        { FALSE, 0x10300, 0x1032F, "Old Italic" },
+        { FALSE, 0x10330, 0x1034F, "Gothic" },
+        { FALSE, 0x10380, 0x1039F, "Ugaritic" },
+        { FALSE, 0x103A0, 0x103DF, "Old Persian" },
+        { FALSE, 0x10400, 0x1044F, "Deseret" },
+        { FALSE, 0x10450, 0x1047F, "Shavian" },
+        { FALSE, 0x10480, 0x104AF, "Osmanya" },
+        { FALSE, 0x10800, 0x1083F, "Cypriot Syllabary" },
+        { FALSE, 0x10900, 0x1091F, "Phoenician" },
+        { FALSE, 0x10A00, 0x10A5F, "Kharoshthi" },
+        { FALSE, 0x12000, 0x123FF, "Cuneiform" },
+        { FALSE, 0x12400, 0x1247F, "Cuneiform Numbers and Punctuation" },
+        { FALSE, 0x1D000, 0x1D0FF, "Byzantine Musical Symbols" },
+        { FALSE, 0x1D100, 0x1D1FF, "Musical Symbols" },
+        { FALSE, 0x1D200, 0x1D24F, "Ancient Greek Musical Notation" },
+        { FALSE, 0x1D300, 0x1D35F, "Tai Xuan Jing Symbols" },
+        { FALSE, 0x1D360, 0x1D37F, "Counting Rod Numerals" },
+        { FALSE, 0x1D400, 0x1D7FF, "Mathematical Alphanumeric Symbols" },
 
-        /* Cut the table here because we only support 4-byte characters */
+        /* Cut the table here because the rest are non-printable characters */
         { FALSE, 0,      0,      NULL },
 };
 
