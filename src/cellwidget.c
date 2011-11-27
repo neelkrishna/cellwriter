@@ -1069,7 +1069,6 @@ static void unclear(int render)
 
 static void draw(double x, double y)
 {
-        Stroke *s;
         int cx, cy;
 
         if (current_cell < 0)
@@ -1087,11 +1086,10 @@ static void draw(double x, double y)
         }
 
         /* Allocate a new stroke if we aren't already drawing */
-        s = input->strokes[input->len - 1];
         if (!drawing) {
                 if (input->len >= STROKES_MAX)
                         return;
-                s = input->strokes[input->len++]= stroke_new(0);
+                input->strokes[input->len++]= stroke_new(0);
                 drawing = TRUE;
                 if (input->len == 1)
                         render_cell(current_cell);
@@ -1729,8 +1727,6 @@ const char *cell_widget_word(void)
 
 void cell_widget_clear(void)
 {
-        int resized;
-
         stop_timeout();
         free_cells();
 
@@ -1741,7 +1737,7 @@ void cell_widget_clear(void)
                 cell_cols = cell_cols_saved;
                 cell_row_view = cell_row_view_saved;
                 training = FALSE;
-                resized = pack_cells(cell_rows, cell_cols);
+                pack_cells(cell_rows, cell_cols);
 
                 /* Show the on-screen keyboard */
                 if (check_clear()) {
@@ -1752,7 +1748,7 @@ void cell_widget_clear(void)
 
         /* Clear cells otherwise */
         else {
-                resized = pack_cells(1, cell_cols);
+                pack_cells(1, cell_cols);
 
                 /* Show the on-screen keyboard */
                 show_keys = keyboard_enabled;
@@ -1959,9 +1955,9 @@ void cell_widget_show_buffer(GtkWidget *button)
                 gchar *string;
 
                 /* Convert string from a UTF-16 array to displayable UTF-8 */
-                string = g_utf16_to_utf8(history[i], -1, NULL, NULL, &error);
+                string = g_ucs4_to_utf8(history[i], -1, NULL, NULL, &error);
                 if (error) {
-                        g_warning("g_utf16_to_utf8(): %s", error->message);
+                        g_warning("g_ucs4_to_utf8(): %s", error->message);
                         continue;
                 }
 
