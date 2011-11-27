@@ -2,9 +2,9 @@ Source: cellwriter
 Version: 1.3.5-1
 Section: gnome
 Priority: optional
-Maintainer: Michael Levin <risujin@risujin.org>
-Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libgtk2.0-dev (>= 2.8), libgnome2-dev, libxtst-dev, librsvg2-common
-Standards-Version: 3.7.3
+Maintainer: Michael Levin (risujin) <melevin@google.com>
+Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libgtk2.0-dev (>= 2.8), libxtst-dev, librsvg2-common
+Standards-Version: 3.9.2
 Homepage: http://risujin.org/cellwriter
 
 Package: cellwriter
