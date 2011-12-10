@@ -227,7 +227,8 @@ void status_icon_create(void)
 
 int status_icon_embedded(void)
 {
-        return status_icon != NULL && gtk_status_icon_is_embedded(status_icon);
+        return status_icon != NULL && 
+               gtk_status_icon_is_embedded(GTK_STATUS_ICON(status_icon));
 }
 
 #endif /* !USING_LIBEGG */

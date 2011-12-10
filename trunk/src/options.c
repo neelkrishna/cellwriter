@@ -91,7 +91,6 @@ void options_sync(void)
 static void unicode_block_toggled(GtkCellRendererToggle *renderer, gchar *path,
                                   GtkListStore *blocks_store)
 {
-        UnicodeBlock *block;
         GtkTreePath *tree_path;
         GtkTreeIter iter;
         GValue value;
@@ -103,7 +102,6 @@ static void unicode_block_toggled(GtkCellRendererToggle *renderer, gchar *path,
         gtk_tree_model_get_iter(GTK_TREE_MODEL(blocks_store), &iter, tree_path);
         index = gtk_tree_path_get_indices(tree_path)[0];
         gtk_tree_path_free(tree_path);
-        block = unicode_blocks + index;
 
         /* Toggle its value */
         memset(&value, 0, sizeof (value));

@@ -1,6 +1,6 @@
 
 INCLUDES = @GTK_CFLAGS@
-LDADD = @GTK_LIBS@
+LDADD = @GTK_LIBS@ -lX11 -lXtst
 AM_CFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 
 bin_PROGRAMS = cellwriter
