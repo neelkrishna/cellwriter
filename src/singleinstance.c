@@ -81,6 +81,9 @@ int single_instance_init(SingleInstanceFunc func, const char *str)
            message and quit. */
         if ((fifo = open(path, O_WRONLY | O_NONBLOCK)) > 0) {
                 size_t written = write(fifo, str, 1);
+                if (!written) {
+                  g_debug("Failed to write to program FIFO\n");
+                }
                 close(fifo);
                 return TRUE;
         }

@@ -231,12 +231,11 @@ static gboolean window_configure(GtkWidget *widget, GdkEventConfigure *event)
 {
         GdkRectangle new_frame = {0, 0, 0, 0};
         GdkScreen *screen;
-        GdkDisplay *display;
         int screen_w, screen_h, height_change, label_w;
 
         if (!window || !window->window)
                 return FALSE;
-        display = gtk_widget_get_display(window);
+        gtk_widget_get_display(window);
 
         /* Get screen and window information */
         screen = gtk_window_get_screen(GTK_WINDOW(window));

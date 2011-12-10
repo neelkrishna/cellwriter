@@ -1,9 +1,24 @@
 cellwriter (1.3.5-1) unstable; urgency=low
 
   * New upstream release
+  * Updated Standards-Version to 3.9.2
 
  -- Michael Levin (risujin) <melevin@google.com>  Sat, 5 Nov 2011 12:53:00 -0700
 
+cellwriter (1.3.4-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "FTBFS with binutils-gold": add patch from Ubuntu / Mahyuddin Susanto:
+    + debian/patches/binutils-gold.patch:
+      - fix FTBFS with ld --no-add-needed (LP: #696848) 
+    (Closes: #554047)
+  * Fix "FTBFS: src/statusicon.c:215:17: error: format not a string
+    literal and no format arguments [-Werror=format-security]":
+    add patch fix-string-format-error.patch from Eric Alexander.
+    (Closes: #643362)
+
+ -- gregor herrmann <gregoa@debian.org>  Sun, 20 Nov 2011 14:40:26 +0100
+ 
 cellwriter (1.3.4-1) unstable; urgency=low
 
   * New upstream release

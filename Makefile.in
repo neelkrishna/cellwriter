@@ -217,7 +217,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = @GTK_CFLAGS@
-LDADD = @GTK_LIBS@
+LDADD = @GTK_LIBS@ -lX11 -lXtst
 AM_CFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 cellwriter_SOURCES = src/common.h src/recognize.h src/main.c \
 	src/window.c src/keyevent.c src/cellwidget.c src/recognize.c \
