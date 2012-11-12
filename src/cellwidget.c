@@ -2010,7 +2010,7 @@ int cell_widget_get_height(void)
 GtkWidget *cell_widget_new(void)
 /* Creates the Cell widget. Should only be called once per program run! */
 {
-        PangoCairoFontMap *font_map;
+        PangoFontMap *font_map;
         GtkWidget *widget, *hbox;
 
         /* Initial settings */
@@ -2081,8 +2081,8 @@ GtkWidget *cell_widget_new(void)
         pango_font_description_set_family(pango_font_desc, "Monospace");
 
         /* Pango context */
-        font_map = PANGO_CAIRO_FONT_MAP(pango_cairo_font_map_new());
-        pango = pango_cairo_font_map_create_context(font_map);
+        font_map = pango_cairo_font_map_new();
+        pango = pango_font_map_create_context(font_map);
         g_object_unref(font_map);
 
         /* Clear cells */

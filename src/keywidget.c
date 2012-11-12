@@ -388,7 +388,7 @@ static gboolean configure_event(GtkWidget *widget, GdkEventConfigure *event,
                                 KeyWidget *key_widget)
 /* Create a new backing pixmap of the appropriate size */
 {
-        PangoCairoFontMap *font_map;
+        PangoFontMap *font_map;
 
         /* Backing pixmap */
         if (key_widget->pixmap) {
@@ -423,8 +423,8 @@ static gboolean configure_event(GtkWidget *widget, GdkEventConfigure *event,
         /* Pango context */
         if (key_widget->pango)
                 g_object_unref(key_widget->pango);
-        font_map = PANGO_CAIRO_FONT_MAP(pango_cairo_font_map_new());
-        key_widget->pango = pango_cairo_font_map_create_context(font_map);
+        font_map = pango_cairo_font_map_new();
+        key_widget->pango = pango_font_map_create_context(font_map);
         g_object_unref(font_map);
 
         /* Resize the widget */
