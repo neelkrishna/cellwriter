@@ -1,14 +1,19 @@
 Source: cellwriter
 Section: gnome
 Priority: optional
-Maintainer: Michael Levin (risujin) <melevin@google.com>
-Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libgtk2.0-dev (>= 2.8), libxtst-dev, librsvg2-common
-Standards-Version: 3.9.2
+Maintainer: Michael Levin <risujin@risujin.org>
+Uploaders: Andrea Colangelo <warp10@ubuntu.com>
+Build-Depends: debhelper (>= 9),
+               autotools-dev,
+               libgtk2.0-dev (>= 2.8),
+               libgnome2-dev,
+               libxtst-dev
+Standards-Version: 3.9.4
 Homepage: http://risujin.org/cellwriter
 
 Package: cellwriter
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, librsvg2-common
 Description: grid-entry handwriting input panel
  CellWriter is a grid-entry natural handwriting input panel.
  As you write characters into the cells, your writing is instantly
